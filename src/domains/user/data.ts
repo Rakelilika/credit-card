@@ -1,5 +1,5 @@
-export const mockUserData= {
+export const mockUserData = {
     name: 'Incentro',
     today: new Date(),
-    avatar: '',
-  }
+    avatar: '/assets/avatar.png',
+}

@@ -1,4 +1,3 @@
-// src/domains/openLibrary/components/BookList.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,8 +5,6 @@ import { fetchBooks } from '../data';
 import { fetchBookDescription, fetchBookEditions, fetchBookRating } from '../data';
 import { Book, Description, Edition } from '../types';
 import HomeLink from '@/shared/ui/HomeLink';
-
-
 
 type Props = {
   query: string;
@@ -19,44 +16,35 @@ export default function BookList({ query }: Props) {
   const [description, setDescription] = useState<string | null>(null);
   const [bestEdition, setBestEdition] = useState<Edition>();
   const [rating, setRating] = useState<any>();
- 
 
   useEffect(() => {
     if (!query) return;
     const loadBooks = async () => {
-      console.log(query);
-
+      // Obtenemos resultados
       let results = await fetchBooks(query);
       if (!results.length) return;
-    
+      // Los procesamos convirtiéndolos a minúsculas
       const queryLower = query.toLowerCase();
-    
       // Intentamos que sea una coincidencia exacta 
       const exactMatch = results.find(book => book.title?.toLowerCase() === queryLower);
-    
-      // Si no hay coincidencia exacta, usamos el primero
+      // Si no hay coincidencia exacta, usamos el primer resultado
       const first = exactMatch || results[0];
-    
       setfirstBook(first);
-
+      // Obtenemos ediciones
       let edit = await fetchBookEditions(first.key);
       setEditions(edit);
-
       let best = edit.find(
         (edition) =>
           edition.number_of_pages &&
           (edition.isbn_10?.length || edition.isbn_13?.length)
       );
       setBestEdition(best);
-      
-    
-        let desc = await fetchBookDescription(first.key);
-        setDescription(desc);
-     
-
+      // Obtenemos descripción de libro
+      let desc = await fetchBookDescription(first.key);
+      setDescription(desc);
+      // Obtenemos valoración de libro
       let rat = await fetchBookRating(first.key);
       setRating(rat);
-     
     };
     loadBooks();
   }, [query]);
@@ -71,7 +59,7 @@ export default function BookList({ query }: Props) {
         <>
           <h1 className="text-2xl font-bold mb-4">{bestEdition?.title}  {rating && ( <span className="text-orange-500">({rating} de 5)</span>)}</h1>
           {description && (
-          <p className="mb-4 w-300">{description.length > 200 ? `${description.slice(0, 590)}...` : description}</p>
+          <p className="mb-4 ">{description.length > 500 ? `${description.slice(0, 500)}...` : description}</p>
           )}
           <h2 className="text-2xl font-bold mt-4">Editions</h2>
           <ul className="list-disc list-inside mt-4">
@@ -99,7 +87,7 @@ export default function BookList({ query }: Props) {
           <img
             src={`https://covers.openlibrary.org/b/isbn/${bestEdition?.isbn_10}-M.jpg`}
             alt={`Cover of ${bestEdition?.title}`}
-            className="w-48 h-auto rounded shadow -mt-50"
+            className="w-50 h-70 rounded shadow -mt-70"
           />
         </div>
         </>

@@ -9,12 +9,13 @@ export default function SearchBooks() {
 
   const handleSearch = () => {
     if (!query.trim()) return;
+    // Usamos encode para codificar la query y así evitar errores con caracteres especiales en la URL
     router.push(`/books?q=${encodeURIComponent(query)}`);
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-2 w-60 flex flex-col gap-3">
-      <h2 className="text-base mb-4">Search and add a new book</h2>
+    <div className="bg-white border border-gray-300 rounded-xl p-4 w-64 flex flex-col gap-3">
+      <h2 className="text-base font-bold mb-4">Search and add a new book</h2>
     <input
       type="text"
       placeholder="Search books"
@@ -32,4 +33,3 @@ export default function SearchBooks() {
   </div>
   );
 }
-
